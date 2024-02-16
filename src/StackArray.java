@@ -31,8 +31,9 @@ public class StackArray {
         //Esta patte de runTimeException no funciona, por lo que la cambiaremos por una simple impresión y retornar
         //un numero extraño, sin embargo, esto no es una correcta implementación del codigo
         if (empty()) {
-            System.out.println("Stack is empty");
-            return -1234456778;
+            //Ahora las excepciones funcionan correctamente
+            System.err.println("Error: Stack is empty");
+            throw new RuntimeException("Stack is empty");
         } else {
             top--;
             return sArray[top];
@@ -42,7 +43,8 @@ public class StackArray {
     //void methods
     public void push(int value){
         if (full()){
-            System.out.println("Stack is full");
+            System.err.println("Error: Stack is full");
+            throw new RuntimeException("Stack is full");
         }
 
         else {
@@ -59,8 +61,7 @@ public class StackArray {
         myStack.push(5);
         myStack.push(3);
         myStack.push(10);
-        //myStack.pop();
-        System.out.println(myStack.full());
+        myStack.push(4);
         //Los metodos parecen funcionar correctamente
 
     }
