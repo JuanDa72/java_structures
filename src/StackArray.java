@@ -28,8 +28,6 @@ public class StackArray {
     }
 
     public int pop() {
-        //Esta patte de runTimeException no funciona, por lo que la cambiaremos por una simple impresión y retornar
-        //un numero extraño, sin embargo, esto no es una correcta implementación del codigo
         if (empty()) {
             //Ahora las excepciones funcionan correctamente
             System.err.println("Error: Stack is empty");
