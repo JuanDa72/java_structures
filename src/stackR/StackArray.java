@@ -1,3 +1,5 @@
+package stackR;
+
 import java.lang.RuntimeException;
 public class StackArray {
     //Esta es la primera implementación que sale en el libro, pagina 29
@@ -59,8 +61,8 @@ public class StackArray {
         myStack.push(5);
         myStack.push(3);
         myStack.push(10);
-        myStack.push(4);
-        //Los metodos parecen funcionar correctamente
+        //Los metodos parecen funcionar correctament
+        System.out.println(myStack);
 
     }
 
