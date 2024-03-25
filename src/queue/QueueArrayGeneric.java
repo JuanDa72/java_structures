@@ -49,6 +49,22 @@ public class QueueArrayGeneric <T> {
         rear=(rear+1)%qArray.length;
     }
 
+    public T getEspecificPosition(int position){
+        return (T) qArray[position];
+    }
+
+    public String toString(){
+        int i=0;
+        String value="[";
+        while (i< qArray.length-1){
+            value+=""+qArray[i]+", ";
+            i++;
+        }
+        value+=qArray[i];
+        value+="]";
+        return value;
+    }
+
     public static void main(String [] args) {
         /*
         QueueArrayGeneric <Integer> cola=new QueueArrayGeneric<> ();
@@ -75,15 +91,7 @@ public class QueueArrayGeneric <T> {
         cola.enqueue("life");
         cola.enqueue("nieve");
         cola.enqueue("time");
-        cola.dequeue();
-        cola.enqueue("pendiente");
-        cola.dequeue();
-        cola.dequeue();
-        cola.dequeue();
-        cola.enqueue("myself");
-        System.out.println(cola.empty());
-        System.out.println(cola.full());
-        System.out.println(cola.getCount());
+        System.out.println(cola);
     }
 
 }

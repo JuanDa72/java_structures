@@ -22,6 +22,10 @@ public class UnorderedLinkedList<T> {
         return count==size;
     }
 
+    public int length(){
+        return size;
+    }
+
     public int getCount(){
         return count;
     }
@@ -30,7 +34,7 @@ public class UnorderedLinkedList<T> {
         boolean conditional=false;
         if (!isFull()){
             if (head==null){
-                head= new GenericNode(key);
+                head= new GenericNode<>(key);
                 conditional=true;
                 count++;
                 tail=head;
@@ -52,6 +56,10 @@ public class UnorderedLinkedList<T> {
     }
 
     public T keyTopFront(){
+        if(head==null){
+            System.err.println("Error: head is null");
+            throw new RuntimeException("head is null");
+        }
         return (T) head.getData();
     }
 
@@ -91,6 +99,10 @@ public class UnorderedLinkedList<T> {
     }
 
     public T keyTopBack(){
+        if (tail==null){
+            System.err.println("Error: tail is null");
+            throw new RuntimeException("tail is null");
+        }
         return (T) tail.getData();
     }
 
@@ -107,13 +119,14 @@ public class UnorderedLinkedList<T> {
                 return (T) current.getData();
             }
             else{
-                while(current.getNext()!=null){
+                while(current.getNext().getNext()!=null){
                     current=current.getNext();
                 }
+                T item=(T) current.getNext().getData();
                 tail=current;
                 tail.setNext(null);
                 count--;
-                return (T) current.getData();
+                return item;
             }
         }
     }
@@ -133,7 +146,6 @@ public class UnorderedLinkedList<T> {
     }
 
     public T erase(T key){
-        boolean deleted=false;
         GenericNode current=head;
         if(isEmpty()){
             System.err.println("Error: linked list is empty");
@@ -141,49 +153,94 @@ public class UnorderedLinkedList<T> {
         }
 
         else{
-            while(current!=null && !deleted){
-                if(current.getData()==key){
-                    if(current==head && current==tail){
-                        head=tail=null;
-                        count--;
+            if(find(key)){
+                if(count==1){
+                    T item= (T) current.getData();
+                    head=tail=null;
+                    count--;
+                    return item;
+                }
+
+                else if(current.getData()==key) {
+                    head = current.getNext();
+                    count--;
+                    return (T) current.getData();
+                }
+                else {
+                    while(current.getNext().getData()!=key) {
+                        current = current.getNext();
                     }
-                    else if(current==head  && current!=tail){
-                        head=current.getNext();
-                        count--;
-                    }
-                    else  if(current!=head && current==tail){
-                        GenericNode p=head;
-                        while(p.getNext()!=null){
-                            p=p.getNext();
-                        }
-                        tail=p;
+                    if(current.getNext()==tail) {
+                        T item = (T) current.getNext().getData();
+                        tail = current;
                         tail.setNext(null);
                         count--;
+                        return item;
                     }
 
-                    deleted=true;
+                    else {
+                        T item=(T) current.getNext().getData();
+                        current.setNext(current.getNext().getNext());
+                        count--;
+                        return item;
+                    }
                 }
-                else{
-                    current=current.getNext();
+
                 }
-            }
+            else{
+                System.err.println("Error: key isn't in the list");
+                throw new RuntimeException("key isn´t in the list");
+                        }
+                    }
+    }
+
+    public boolean addBefore(T key, GenericNode node){
+        boolean inserted=false;
+        if (node==head){
+            inserted=pushFront(key);
         }
-        return (T) current.getData();
+        else{
+            GenericNode current=head;
+            while(current.getNext()!=node){
+                current=current.getNext();
+            }
+            GenericNode nodeNew=new GenericNode<>(key);
+            nodeNew.setNext(current.getNext());
+            current.setNext(nodeNew);
+            count++;
+            inserted=true;
+        }
+        return inserted;
+    }
+
+    public String toString(){
+        String values="";
+        GenericNode current=head;
+        if(!isEmpty() && getCount()!=1){
+            while (current.getNext()!=null){
+                values+=""+current.getData()+", ";
+                current=current.getNext();
+            }
+            values+=""+current.getData();
+            String f="["+values+"]";
+            return f;
+        }
+
+        else if(!isEmpty() && getCount()==1){
+            values+="["+current.getData()+"]";
+            return values;
+        }
+
+        else{
+            return "[]";
+        }
     }
 
 
 
-    public static void main(String [] args){
-        UnorderedLinkedList<Integer> linkedlist=new UnorderedLinkedList<>(4);
-        System.out.println(linkedlist.pushFront(3));
-        System.out.println(linkedlist.pushFront(2));
-        //System.out.println(linkedlist.popFront());
-        //System.out.println(linkedlist.pushBack(8));
-        linkedlist.pushBack(7);
-        linkedlist.pushBack(34);
-        System.out.println(linkedlist.find(2));
-        System.out.println(linkedlist.getCount());
-
+    public static void main(String [] args) {
+        UnorderedLinkedList<Integer> linkedlist = new UnorderedLinkedList<>(4);
+        linkedlist.pushFront(4);
+        //System.out.println(linkedlist);
     }
-
 }
