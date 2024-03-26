@@ -21,10 +21,19 @@ public class problem2 {
             listJobs.insert(Integer.parseInt(element));
         }
 
-        for(String element: list){
-            System.out.println(element);
-        }
-        System.out.println(listJobs);
+        int sJob=Integer.parseInt(list[position]);
+
+        int time=0;
+        boolean done=false;
+        System.out.println(listJobs.popFront());
+        //while(!done){
+            //if(sJob==-1*listJobs.popFront()){
+                //done=true;
+            //}
+            //else{
+                //time++;
+            //}
+        //}
 
     }
 }

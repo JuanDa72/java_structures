@@ -1,5 +1,7 @@
 package list;
 
+import java.util.Scanner;
+
 public class OrderedArrayList {
 
     private static int size=15;
@@ -69,7 +71,7 @@ public class OrderedArrayList {
         if (!isEmpty()){
             if (search(item)){
                 getPosition(item);
-                for(int i=position; i<count; i++){
+                for(int i=position; i<count-1; i++){
                     lArray[i]=lArray[i+1];
                 }
                 count--;
@@ -82,48 +84,76 @@ public class OrderedArrayList {
     return deleted;
     }
 
-    public boolean insert(int item){
-        boolean inserted=false;
-        if(!isFull()){
-            getPosition(item);
-            for(int i=count;i>position;i--){
-                lArray[i]=lArray[i-1];
+
+        public boolean insert ( int item){
+            boolean inserted = false;
+            if (!isFull()) {
+                getPosition(item);
+                for (int i = count; i > position; i--) {
+                    lArray[i] = lArray[i - 1];
+                }
+                lArray[position] = item;
+                inserted = true;
+                count++;
+            } else {
+                System.out.println("List is full");
             }
-            lArray[position]=item;
-            inserted=true;
-            count++;
+            return inserted;
         }
-        else{
-            System.out.println("List is full");
+
+    public int popFront() {
+    int number = lArray[0];
+    boolean deleted = delete(number);
+    if (deleted) {
+        return number;
         }
-        return inserted;
+    else {
+        System.out.println("Error: list is empty");
+        throw new RuntimeException("List is empty");
+        }
     }
 
-    public String toString(){
-        String numbers="";
-        for (int i=0; i<count; i++){
-            String number_count=""+lArray[i];
-            numbers+=number_count+", ";
+        public String toString () {
+            String numbers = "";
+
+            if(!isEmpty()){
+                for (int i = 0; i < count - 1; i++) {
+                    String number_count = "" + lArray[i];
+                    numbers += number_count + ", ";
+                }
+                numbers += lArray[count - 1] + "";
+                String list = "[" + numbers + "]";
+                return list;
+            }
+
+            else{
+                return "List is empty";
+            }
         }
-        numbers+=lArray[lArray.length-1]+"";
-        String list="["+numbers+"]";
-        return list;
+
+        public static void main (String[]args){
+            Scanner sc=new Scanner(System.in);
+            int number_elements=sc.nextInt();
+            int position=sc.nextInt();
+
+            sc.nextLine();
+
+            String values=sc.nextLine();
+            String list[]=values.split(" ");
+            OrderedArrayList listJobs=new OrderedArrayList(number_elements);
+
+            for (String element: list){
+                element="-"+element;
+                listJobs.insert(Integer.parseInt(element));
+            }
+
+            int sJob=Integer.parseInt(list[position]);
+
+            int time=0;
+            boolean done=false;
+            System.out.println(listJobs.popFront());
+        }
     }
 
-    public static void main(String [] args){
-        OrderedArrayList list=new OrderedArrayList();
-        System.out.println(list.insert(2));
-        System.out.println(list.isEmpty());
-        System.out.println(list.isFull());
-        System.out.println(list.insert(0));
-        list.insert(-10);
-        list.insert(22);
-        list.insert(1);
-        list.insert(6);
-        list.delete(-10);
-        System.out.println(list);
-        System.out.println(list.getCount());
-    }
 
 
-}
