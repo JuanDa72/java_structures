@@ -133,25 +133,16 @@ public class OrderedArrayList {
 
         public static void main (String[]args){
             Scanner sc=new Scanner(System.in);
-            int number_elements=sc.nextInt();
-            int position=sc.nextInt();
-
-            sc.nextLine();
-
-            String values=sc.nextLine();
-            String list[]=values.split(" ");
-            OrderedArrayList listJobs=new OrderedArrayList(number_elements);
-
-            for (String element: list){
-                element="-"+element;
-                listJobs.insert(Integer.parseInt(element));
-            }
-
-            int sJob=Integer.parseInt(list[position]);
-
-            int time=0;
-            boolean done=false;
-            System.out.println(listJobs.popFront());
+            OrderedArrayList list=new OrderedArrayList(4);
+            System.out.println(list.insert(4));
+            list.insert(2);
+            list.insert(1);
+            list.insert(0);
+            System.out.println(list.delete(1));
+            System.out.println(list.getCount());
+            System.out.println(list.isEmpty());
+            System.out.println(list.isFull());
+            System.out.println(list);
         }
     }
 
