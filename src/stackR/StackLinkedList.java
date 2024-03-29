@@ -45,17 +45,11 @@ public class StackLinkedList <T> {
     }
 
     public static void main (String[] args){
-        StackLinkedList stack=new StackLinkedList(3);
-        System.out.println(stack.isFull());
+        System.out.println("nade");
+        StackLinkedList <Integer> stack=new StackLinkedList(4);
         stack.push(3);
-        stack.push(8);
-        stack.push(4);
-        System.out.println(stack.pop());
+        stack.push(5);
         System.out.println(stack);
-        stack.pop();
-        System.out.println(stack);
-        System.out.println(stack.getCount());
-        System.out.println(stack.length());
     }
 
 }

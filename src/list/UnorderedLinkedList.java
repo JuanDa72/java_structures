@@ -213,6 +213,22 @@ public class UnorderedLinkedList<T> {
         return inserted;
     }
 
+    public T getValue(int position){
+        int counter=0;
+        GenericNode current=head;
+        if(!isEmpty() && position<count){
+            while(counter<position){
+                current=current.getNext();
+                counter++;
+            }
+            return (T) current.getData();
+        }
+        else{
+            System.err.println("Error: List is empty or position is out of range");
+            throw new RuntimeException("List is empty or position is out of range");
+        }
+    }
+
     public String toString(){
         String values="";
         GenericNode current=head;
@@ -241,6 +257,9 @@ public class UnorderedLinkedList<T> {
     public static void main(String [] args) {
         UnorderedLinkedList<Integer> linkedlist = new UnorderedLinkedList<>(4);
         linkedlist.pushFront(4);
-        //System.out.println(linkedlist);
+        linkedlist.pushBack(1);
+        linkedlist.pushBack(2);
+        System.out.println(linkedlist.getValue(-1));
+        System.out.println(linkedlist);
     }
 }

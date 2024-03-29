@@ -2,7 +2,7 @@ package stackR;
 
 public class StackArrayGeneric <T> {
     //Debemos intercambiar cualquier int por T para establecer el generico
-    private static final int size=3;
+    private static final int size=100;
 
     private int top;
 
@@ -53,6 +53,10 @@ public class StackArrayGeneric <T> {
         }
     }
 
+    public int getCount(){
+        return top;
+    }
+
     public static void main(String [] args){
         //pruebas
         //La forma de instanciar la clase es como si fuera un arrayList
@@ -61,12 +65,11 @@ public class StackArrayGeneric <T> {
         stack.push("alone");
         stack.push("nobody");
         stack.push("life");
-
-        while (!stack.empty()){
-            System.out.println(stack.pop()+" ");
+        int counter=stack.getCount();
+        for(int i=0; i<counter; i++){
+            System.out.println(stack.pop());
         }
-        //Parece funcionar correctamente
-    }
 
 
+        }
 }
