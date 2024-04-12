@@ -2,7 +2,7 @@ package queue;
 
 public class QueueArrayGeneric <T> {
 
-    private static int size=5;
+    private static int size=1000;
     private int front, rear, count;
     private T[] qArray;
 
