@@ -194,24 +194,59 @@ public class UnorderedLinkedList<T> {
                     }
     }
 
-    public boolean addBefore(T key, GenericNode node){
-        boolean inserted=false;
-        if (node==head){
-            inserted=pushFront(key);
-        }
-        else{
+    public boolean addBefore(T key, int position){
+        while(!isFull() && position<=getCount()-1){
+            boolean inserted=true;
+            int counter=0;
             GenericNode current=head;
-            while(current.getNext()!=node){
-                current=current.getNext();
+            if(position==0){
+                inserted=pushFront(key);
             }
-            GenericNode nodeNew=new GenericNode<>(key);
-            nodeNew.setNext(current.getNext());
-            current.setNext(nodeNew);
-            count++;
-            inserted=true;
+            else{
+                while(counter<position-1){
+                    current=current.getNext();
+                    counter++;
+                }
+                GenericNode post=current.getNext();
+                GenericNode n=new GenericNode<>(key);
+                current.setNext(n);
+                n.setNext(post);
+                inserted=true;
+                count++;
+            }
+            return inserted;
         }
-        return inserted;
+        System.err.println("Error: Linked list is full or position is out of range");
+        throw new RuntimeException();
+        }
+
+    public boolean addAfter(T key, int position){
+        while(!isFull() && position<getCount()){
+            boolean inserted=false;
+            int counter=0;
+            GenericNode current=head;
+            if (position==getCount()-1){
+                inserted=pushBack(key);
+            }
+            else{
+                while(counter<position){
+                    current=current.getNext();
+                    counter++;
+                }
+                GenericNode post=current.getNext();
+                GenericNode n=new GenericNode(key);
+                current.setNext(n);
+                n.setNext(post);
+                inserted=true;
+                count++;
+            }
+            return inserted;
+        }
+        System.err.println("Error: List is full or position is  out of range");
+        throw new RuntimeException("List is full or position is out of range");
     }
+
+
 
     public T getValue(int position){
         int counter=0;
@@ -257,9 +292,8 @@ public class UnorderedLinkedList<T> {
     public static void main(String [] args) {
         UnorderedLinkedList<Integer> linkedlist = new UnorderedLinkedList<>(4);
         linkedlist.pushFront(4);
-        linkedlist.pushBack(1);
-        linkedlist.pushBack(2);
-        System.out.println(linkedlist.getValue(-1));
+        System.out.println(linkedlist.addBefore(7,0));
         System.out.println(linkedlist);
+        System.out.println(linkedlist.getCount());
     }
 }

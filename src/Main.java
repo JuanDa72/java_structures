@@ -10,57 +10,70 @@ public class Main {
 
         list.UnorderedLinkedList<Character> list=new list.UnorderedLinkedList<>(text.length());
 
+        boolean start=false;
+        boolean end=false;
         int j=0;
-        while(j<text.length()){
-            char c=text.charAt(j);
-            Character cc=Character.valueOf(c);
-            if(!cc.equals('[')){
-                list.pushBack(cc);
+        int place = 0;
+        while(j<text.length()) {
+            //System.out.println(j);
+            char c = text.charAt(j);
+            if (c == '[') {
+                //System.out.println("incio");
+                start=true;
                 j++;
-            }
-            else{
-                boolean end=false;
-                StackArrayGeneric<Character> stack=new StackArrayGeneric<>();
-                while(!end){
-                    int start=0;
-                    j++;
-                    c=text.charAt(j);
-                    cc=Character.valueOf(c);
-                    if(!cc.equals(']') && !cc.equals('[')){
-                        //System.out.println("ent");
-                        stack.push(cc);
-                    }
-                    else if(!cc.equals(']') && cc.equals('[')){
-                        j++;
-                        start++;
-                    }
+                place=0;
+                }
 
-                    else{
+
+            else if(c==']'){
+                //System.out.println("j");
+                j++;
+                //end=true;
+                start=false;
+                place=0;
+                }
+
+            else{
+                if(start) {
+                    if (place == 0) {
+                        //System.out.println(j);
+                        list.pushFront(c);
+                        place++;
                         j++;
-                        if(start==0){
-                            end=true;
-                        }
-                        else{
-                            start--;
-                        }
+                        //7System.out.println(list);
+                    } else {
+                        //System.out.println(j+" before");
+                        list.addAfter(c, place-1);
+                        j++;
+                        place++;
+                        //System.out.println(list);
                     }
                 }
-                int counter=stack.getCount();
-                for (int k=0; k<counter ;k++) {
-                    //System.out.println(k);
-                    list.pushFront(stack.pop());
+
+                else if(end){
+                    //System.out.println("start else");
+                    j++;
+                    }
+
+                else{
+                    list.pushBack(c);
+                    j++;
+                    //System.out.println("nao");
                 }
             }
         }
+
+        //System.out.println(list);
 
         StringBuilder sb = new StringBuilder();
 
-        for(int i=0; i<list.getCount(); i++){
-            sb.append(list.getValue(i));
+        int counter=list.getCount();
+
+        for(int i=0; i<counter; i++){;
+            sb.append(list.popFront());
         }
 
         System.out.println(sb);
-
 
     }
 }
