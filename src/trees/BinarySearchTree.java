@@ -1,6 +1,8 @@
 package trees;
 import queue.QueueArrayGeneric;
 
+import javax.print.attribute.standard.Compression;
+
 public class BinarySearchTree <T> {
 
     private Node root;
@@ -11,7 +13,7 @@ public class BinarySearchTree <T> {
     }
 
     //class node
-    private class Node <T> {
+    private class Node <T extends Comparable<T>> {
 
         private T key;
         private Node left;
@@ -92,7 +94,7 @@ public class BinarySearchTree <T> {
     public void levelTraversal(){
         QueueArrayGeneric<Object> queue= new QueueArrayGeneric<>(size());
         while (!queue.empty()){
-            Node node=new Node(queue.dequeue());
+            Node node=new Node((Comparable) queue.dequeue());
             System.out.println(node.key);
 
             if (node.left!=null){
@@ -104,6 +106,23 @@ public class BinarySearchTree <T> {
         }
     }
 
+    private Node find(Node node, T key){
+        if (node.key.compareTo(key)==0){
+            return node;
+        }
+        else if(node.key.compareTo(key)<0){
+            return find(
+                    node.right,key);
+        }
+        else if(node.key.compareTo(key)>0){
+            return find(node.left,key);
+        }
+        else return null;
+    }
+
+    public Node find(T key){
+        return find(root, key);
+    }
 
 
 
