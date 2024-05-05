@@ -97,18 +97,25 @@ public class BinarySearchTree <T> {
 
     //breadth-first
     public void levelTraversal(){
-        QueueArrayGeneric<Object> queue= new QueueArrayGeneric<>(size());
-        while (!queue.empty()){
-            Node node=new Node((Comparable) queue.dequeue());
-            System.out.println(node.key);
+        QueueArrayGeneric<Node> queue= new QueueArrayGeneric<>(size());
+        if(root==null){
+            System.out.println("Tree is empty");
+        }
+        else{
+            queue.enqueue(root);
+            while (!queue.empty()){
+                Node node=queue.dequeue();
+                System.out.println(node.key);
 
-            if (node.left!=null){
-                queue.enqueue(node.left);
-            }
-            if (node.right!=null){
-                queue.enqueue(node.right);
+                if (node.left!=null){
+                    queue.enqueue(node.left);
+                }
+                if (node.right!=null){
+                    queue.enqueue(node.right);
+                }
             }
         }
+
     }
 
     private Node find(Node node, T key){
@@ -148,11 +155,16 @@ public class BinarySearchTree <T> {
     }
 
     private Node rightAncestor(Node node){
-        if (node.key.compareTo(node.parent.key)<0){
-            return node.parent;
+        if(node.parent==null){
+            return null;
         }
         else{
-            return rightAncestor(node.parent);
+            if (node.key.compareTo(node.parent.key)<0){
+                return node.parent;
+            }
+            else{
+                return rightAncestor(node.parent);
+            }
         }
     }
 
@@ -212,15 +224,278 @@ public class BinarySearchTree <T> {
         throw new RuntimeException("Key is already in the tree");
     }
 
-    public static void main(String []args){
-        BinarySearchTree<Integer> bst=new BinarySearchTree<>();
-        bst.insert(17);
-        bst.insert(8);
-        bst.insert(14);
+    //Determina si el hijo es izquierdo o derecho
+    private boolean leftSon(Node father, Node son){
+        if (father.left==son){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean rightSon(Node father, Node son){
+        if(father.right==son){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    //promueve el hijo derecho a la posición del padre
+    private void promote(Node parent, Node son){
+        if(leftSon(parent.parent,parent)){
+            parent.parent.left=son;
+            son.parent=parent.parent;
+        }
+        else{
+            parent.parent.right=son;
+            son.parent=parent.parent;
+        }
+    }
+
+    public Node delete(T key){
+        Node node=find(key);
+        if(node==null){
+            return null;
+        }
+        else{
+            if (node==root){
+                if (root.right==null && root.left==null){
+                    root=null;
+                    return node;
+                }
+                else if(node.right==null){
+                    root=node.left;
+                    return node;
+                }
+                else{
+                    //Arreglar esta parte, con el caso que esta en el main
+                    Node n=next(key);
+                    //System.out.println("n "+n);
+                    n.left=root.left;
+                    if(root.left!=null){
+                        root.left.parent=n;
+                    }
+                    if(n.right!=null){
+                        promote(n,n.right);
+                    }
+                    if (node.right!=n){
+                        n.right=node.right;
+                        node.right.parent=n;
+                    }
+                    if(leftSon(n.parent,n)){
+                        n.parent.left=null;
+                    }
+                    else if(rightSon(n.parent,n)){
+                        n.parent.right=null;
+                    }
+                    root=n;
+                    n.parent=null;
+                    //System.out.println(root);
+                    //System.out.println(root.right.parent);
+                    return node;
+                }
+            }
+            else if(node.right==null){
+                if(node==node.parent.left){
+                    node.parent.left=node.left;
+                    if(node.left!=null){
+                        node.left.parent=node.parent;
+                    }
+                    return node;
+                }
+                else{
+                    node.parent.right=node.left;
+                    if(node.left!=null){
+                        node.left.parent=node.parent;
+                    }
+                    return node;
+                }
+            }
+            else{
+                Node n=next(key);
+                //System.out.println(n);
+                if(n.right==null){
+                    if(node.parent.left==node){
+                        node.parent.left=n;
+                        n.left=node.left;
+                        if(node.left!=null){
+                            node.left.parent=n;
+                        }
+                        if(node.right!=n){
+                            n.right=node.right;
+                            node.right.parent=n;
+                        }
+                        if(leftSon(n.parent,n)){
+                            n.parent.left=null;
+                        }
+                        else if (rightSon(n.parent,n)){
+                            n.parent.right=null;
+                        }
+                        n.parent=node.parent;
+                        return node;
+                    }
+                    else{
+                        node.parent.right=n;
+                        n.left=node.left;
+                        if(node.left!=null){
+                            node.left.parent=n;
+                        }
+                        //System.out.println(n.parent);
+                        //System.out.println(n.parent.left);
+                        //System.out.println(n.parent.right);
+                        if(node.right!=n){
+                            //System.out.println("jhi");
+                            //System.out.println(node.right);
+                            n.right=node.right;
+                            node.right.parent=n;
+                        }
+                        if(leftSon(n.parent,n)){
+                            //System.out.println("hi");
+                            n.parent.left=null;
+                        }
+                        else{
+                            n.parent.right=null;
+                        }
+                        n.parent=node.parent;
+                        //Aqui esta el problema, ver mañana
+                        //System.out.println(node.right.left);
+                        return node;
+                    }
+                }
+                else {
+                    //System.out.println("nodo "+node+" node.parent" +node.parent);
+                    //System.out.println(node.right);
+                    //System.out.println(node.left);
+                    if(node.parent.left==node){
+                        node.parent.left=n;
+                        n.left=node.left;
+                        if(node.left!=null){
+                            node.left.parent=n;
+                        }
+                        promote(n,n.right);
+                        n.parent=node.parent;
+                        if(node.right!=n){
+                            n.right=node.right;
+                            node.right.parent=n;
+                        }
+                        return node;
+                    }
+                    else{
+                        node.parent.right=n;
+                        n.left=node.left;
+                        if(node.left!=null){
+                            node.left.parent=n;
+                        }
+                        promote(n,n.right);
+                        if(node.right!=n){
+                            n.right=node.right;
+                            node.right.parent=n;
+                        }
+                        n.parent=node.parent;
+                        //System.out.println("n  es "+n);
+                        //System.out.println("n.parent es"+n.parent);
+                        //System.out.println("node.parent es "+node.parent);
+                        //System.out.println(n.left);
+                        //System.out.println(n.right);
+                        //System.out.println(n.right.left);
+                        //System.out.println(n.right);
+                        return node;
+                    }
+                }
+            }
+
+        }
+    }
+
+    public static void main(String []args) {
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        bst.insert(19);
+        bst.insert(44);
+        bst.insert(7);
+        bst.insert(35);
+        bst.insert(28);
+        bst.insert(11);
+        bst.insert(50);
         bst.insert(3);
-        bst.insert(20);
-        bst.insert(5);
-        bst.postOrder();
+        bst.insert(22);
+        bst.insert(15);
+        bst.insert(39);
+        bst.insert(6);
+        bst.insert(32);
+        bst.insert(18);
+        bst.insert(47);
+        bst.insert(10);
+        bst.insert(25);
+        bst.insert(36);
+        bst.insert(9);
+        //bst.inOrder();
+        //System.out.println(bst.delete(30));
+        bst.delete(15);
+        bst.delete(47);
+        bst.insert(21);
+        bst.delete(44);
+        bst.delete(3);
+        bst.insert(49);
+        bst.delete(36);
+        bst.delete(39);
+        bst.insert(47);
+        bst.delete(47);
+        bst.delete(6);
+        bst.insert(6);
+        bst.delete(6);
+        bst.delete(35);
+        bst.insert(17);
+        bst.delete(17);
+        bst.delete(11);
+        bst.insert(27);
+        bst.delete(25);
+        bst.delete(49);
+        bst.insert(14);
+        bst.delete(22);
+        bst.delete(9);
+        bst.insert(16);
+        bst.delete(14);
+        bst.delete(50);
+        bst.insert(8);
+        bst.delete(32);
+        bst.delete(28);
+        bst.insert(41);
+        bst.delete(16);
+        bst.delete(41);
+        bst.insert(36);
+        bst.delete(19);
+        bst.delete(36);
+        bst.insert(15);
+        bst.delete(27);
+        bst.delete(15);
+        bst.insert(24);
+        bst.delete(24);
+        bst.delete(21);
+        bst.insert(6);
+        bst.delete(18);
+        bst.delete(10);
+        bst.insert(11);
+        bst.delete(8);
+        bst.delete(6);
+        bst.insert(44);
+        bst.delete(11);
+        bst.delete(44);
+        bst.insert(16);
+        bst.delete(16);
+        bst.delete(7);
+        //bst.delete(45);
+        //bst.insert(44);
+        //bst.delete(44);
+        //bst.delete(48);
+        //bst.delete(50);
+        //System.out.println();
+        System.out.println();
+        bst.levelTraversal();
+        //bst.postOrder();
+        //bst.inOrder();
     }
 
 }
