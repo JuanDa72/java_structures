@@ -1,17 +1,19 @@
 package trees;
-import queue.QueueArrayGeneric;
-import java.util.*;
 
-public class BinarySearchTree <T> {
+import queue.QueueArrayGeneric;
+
+import java.util.ArrayList;
+
+public class AVLtree <T> {
 
     private Node root;
 
-    //Constructor of BST
-    public BinarySearchTree(){
+    //constructor
+    public AVLtree(){
         root=null;
     }
 
-    //class node
+    //class Node
     private class Node <T extends Comparable<T>> {
 
         private T key;
@@ -29,8 +31,6 @@ public class BinarySearchTree <T> {
         public String toString(){
             return key.toString();
         }
-
-        //Methods for Node class
     }
 
     private int height(Node node){
@@ -56,7 +56,6 @@ public class BinarySearchTree <T> {
         return size(root);
     }
 
-    //Depth-first method
     private void inOrder(Node node){
         if (node==null){
             return;
@@ -96,7 +95,6 @@ public class BinarySearchTree <T> {
         postOrder(root);
     }
 
-    //breadth-first
     public void levelTraversal(){
         QueueArrayGeneric<Node> queue= new QueueArrayGeneric<>(size());
         if(root==null){
@@ -116,7 +114,6 @@ public class BinarySearchTree <T> {
                 }
             }
         }
-
     }
 
     private Node find(Node node, T key){
@@ -146,6 +143,7 @@ public class BinarySearchTree <T> {
         return find(root, key);
     }
 
+    //return the left descendent if node has
     private Node leftDescendent(Node node){
         if (node.left==null){
             return node;
@@ -170,7 +168,6 @@ public class BinarySearchTree <T> {
     }
 
     private Node next(T key){
-        //Confiando en que el método find funcione correctamente
         Node node=find(key);
         if (node==null){
             System.err.println("Error: Key not in tree");
@@ -186,7 +183,6 @@ public class BinarySearchTree <T> {
         }
     }
 
-    //Implement of range search (on hold)
     public ArrayList<T> rangeSearch(T lower, T higher){
         ArrayList<T> range=new ArrayList<>();
         Node limit=find(lower);
@@ -202,6 +198,8 @@ public class BinarySearchTree <T> {
         return range;
     }
 
+
+    //This method must be modified to make the rotation
     public Node insert(T key){
         if(find(key)==null){
             Node current=root;
@@ -240,7 +238,7 @@ public class BinarySearchTree <T> {
     }
 
     //Determina si el hijo es izquierdo
-    private boolean leftSon(Node father, Node son){
+    private boolean leftSon(Node father,Node son){
         if (father.left==son){
             return true;
         }
@@ -270,6 +268,8 @@ public class BinarySearchTree <T> {
         }
     }
 
+
+    //This method must be modified to implement rotations
     public Node delete(T key){
         Node node=find(key);
         if(node==null){
@@ -425,27 +425,8 @@ public class BinarySearchTree <T> {
         }
     }
 
-    public static void main(String []args) {
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-        bst.insert(7);
-        bst.insert(4);
-        bst.insert(1);
-        bst.insert(6);
-        bst.insert(13);
-        bst.insert(10);
-        bst.insert(15);
-        //bst.inOrder();
-        //System.out.println(bst.delete(30));
-        //bst.delete(45);
-        //bst.insert(44);
-        //bst.delete(44);
-        //bst.delete(48);
-        //bst.delete(50);
-        //System.out.println();
-        System.out.println();
-        System.out.println(bst.rangeSearch(5,12));
-        //bst.postOrder();
-        //bst.inOrder();
-    }
+
+
+
 
 }
