@@ -21,6 +21,8 @@ public class AVLtree <T> {
         private Node right;
         private Node parent;
 
+        private int height;
+
         public Node(T key){
             this.key=key;
             left=null;
@@ -198,44 +200,177 @@ public class AVLtree <T> {
         return range;
     }
 
+    private void rotateRight(Node node){
+        //System.out.println("nodo "+node);
+        Node p=node.parent;
+        Node y=node.left;
+        Node b=y.right;
+        if(node.parent!=null){
+            y.parent=p;
+            if(leftSon(p,node)){
+                p.left=y;
+            }
+            else if(rightSon(p,node)){
+                p.right=y;
+            }
+        }
+        else{
+            y.parent=null;
+        }
+        node.parent=y;
+        node.left=y.right;
+        y.right=node;
+        if(b!=null){
+            b.parent=node;
+        }
+        if(node==root){
+            root=y;
+        }
+        node.height=height(node);
+        Node start=y.left;
+        if(start==null){
+            start=y;
+            y.height=height(y);
+        }
+        else{
+            y.left.height=height(y.left);
+        }
+        if(node.right!=null){
+            node.right.height=height(node.right);
+        }
+        //node.right.height=height(node.right);
+        while(start!=null){
+            start.height=height(start.parent);
+            start=start.parent;
+        }
+    }
 
-    //This method must be modified to make the rotation
-    public Node insert(T key){
-        if(find(key)==null){
+    private void rotateLeft(Node node){
+        Node p=node.parent;
+        Node y=node.right;
+        Node c=y.left;
+        if(node.parent!=null){
+            y.parent=p;
+            if(leftSon(p,node)){
+                p.left=y;
+            }
+            else if(rightSon(p,node)){
+                p.right=y;
+            }
+        }
+        else{
+            y.parent=null;
+        }
+        node.parent=y;
+        node.right=c;
+        y.left=node;
+        if(c!=null){
+            c.parent=node;
+        }
+        if(node==root){
+            root=y;
+        }
+        node.height=height(node);
+        Node start=y.right;
+        if(start==null){
+            start=node;
+            y.height=height(y);
+        }
+        else{
+            y.left.height=height(y.left);
+        }
+        if(node.left!=null){
+            node.left.height=height(node.left);
+        }
+        //node.left.height=height(node.left);
+        while(start!=null){
+            start.height=height(start.parent);
+            start=start.parent;
+        }
+    }
+
+    private void rebalanceRight(Node node){
+        Node m=node.left;
+        if(height(m.right)>height(m.left)){
+            rotateLeft(m);
+        }
+        rotateRight(node);
+        //Maybe make the adjustHeight here
+    }
+
+    private void rebalanceLeft(Node node){
+        Node m=node.right;
+        if(height(m.left)>height(m.right)){
+            rotateRight(m);
+         }
+        rotateLeft(node);
+    }
+
+    private void rebalance(Node node){
+        //System.out.println("rebalance "+node);
+        Node p=node.parent;
+        //System.out.println(p);
+        if(height(node.left)>height(node.right)+1){
+            //System.out.println("Entrada 1 "+node);
+            rebalanceRight(node);
+        }
+        if(height(node.right)>height(node.left)+1){
+            //System.out.println("Entrada 2 "+node);
+            rebalanceLeft(node);
+        }
+        node.height=height(node);
+        //System.out.println(node.height);
+        if(p!=null){
+            //System.out.println("Entrada 3 "+p);
+            rebalance(p);
+        }
+    }
+
+    //We must modify this method
+    private void insert(T key){
+        if(find(key)!=null){
+            System.err.println("Error: key is already in the tree");
+            throw new RuntimeException("Key is already in the tree");
+        }
+        else{
+            //System.out.println("Insert else");
             Node current=root;
             if(root==null){
                 Node node=new Node((Comparable) key);
                 root=node;
-                return node;
             }
-            while(current!=null){
-                if(current.key.compareTo(key)>0){
-                    if(current.left==null){
-                        Node node=new Node((Comparable) key);
-                        current.left=node;
-                        node.parent=current;
-                        return node;
+            else{
+                while(current!=null){
+                    if(current.key.compareTo(key)>0){
+                        if(current.left==null){
+                            Node node=new Node((Comparable) key);
+                            current.left=node;
+                            node.parent=current;
+                            break;
+                        }
+                        else{
+                            current=current.left;
+                        }
                     }
                     else{
-                        current=current.left;
-                    }
-                }
-                else{
-                    if(current.right==null){
-                        Node node=new Node((Comparable) key);
-                        current.right=node;
-                        node.parent=current;
-                        return node;
-                    }
-                    else{
-                        current=current.right;
+                        if(current.right==null){
+                            Node node=new Node((Comparable) key);
+                            current.right=node;
+                            node.parent=current;
+                            break;
+                        }
+                        else{
+                            current=current.right;
+                        }
                     }
                 }
             }
         }
-        System.err.println("Error: key is already in the tree");
-        throw new RuntimeException("Key is already in the tree");
+        Node n=find(key);
+        //System.out.println("Nodo insertado "+ n);
+        rebalance(n);
     }
+
 
     //Determina si el hijo es izquierdo
     private boolean leftSon(Node father,Node son){
@@ -423,6 +558,29 @@ public class AVLtree <T> {
             }
 
         }
+    }
+
+    public static void main(String [] args){
+        AVLtree<Integer> avl=new AVLtree<>();
+        avl.insert(33);
+        avl.insert(23);
+        avl.insert(15);
+        avl.insert(24);
+        avl.insert(37);
+        avl.insert(92);
+        avl.insert(31);
+        avl.insert(29);
+        avl.insert(99);
+        avl.insert(94);
+        avl.insert(22);
+        avl.insert(54);
+        avl.insert(75);
+        avl.insert(58);
+        avl.insert(39);
+        avl.insert(55);
+        //avl.inOrder();
+        //System.out.println();
+        avl.levelTraversal();
     }
 
 
