@@ -307,22 +307,28 @@ public class AVLtree <T> {
     }
 
     private void rebalance(Node node){
-        //System.out.println("rebalance "+node);
-        Node p=node.parent;
-        //System.out.println(p);
-        if(height(node.left)>height(node.right)+1){
-            //System.out.println("Entrada 1 "+node);
-            rebalanceRight(node);
+        if(node!=null){
+            node.height=height(node);
+            //System.out.println("rebalance "+node+" "+node.height);
+            Node p=node.parent;
+            //System.out.println(p);
+            if(height(node.left)>height(node.right)+1){
+                //System.out.println("Entrada 1 "+node);
+                rebalanceRight(node);
+            }
+            if(height(node.right)>height(node.left)+1){
+                //System.out.println("Entrada 2 "+node);
+                rebalanceLeft(node);
+            }
+            node.height=height(node);
+            //System.out.println(node.height);
+            if(p!=null){
+                //System.out.println("Entrada 3 "+p);
+                rebalance(p);
+            }
         }
-        if(height(node.right)>height(node.left)+1){
-            //System.out.println("Entrada 2 "+node);
-            rebalanceLeft(node);
-        }
-        node.height=height(node);
-        //System.out.println(node.height);
-        if(p!=null){
-            //System.out.println("Entrada 3 "+p);
-            rebalance(p);
+        else{
+            return;
         }
     }
 
@@ -403,26 +409,28 @@ public class AVLtree <T> {
         }
     }
 
-
-    //This method must be modified to implement rotations
-    public Node delete(T key){
+    public void delete(T key){
         Node node=find(key);
+        Node start;
         if(node==null){
-            return null;
+            System.err.println("Error: key is not in the tree");
+            throw new RuntimeException("Key is not in the tree");
         }
         else{
             if (node==root){
                 if (root.right==null && root.left==null){
                     root=null;
-                    return node;
+                    start=null;
+
                 }
                 else if(node.right==null){
                     root=node.left;
-                    return node;
+                    start=null;
                 }
                 else{
                     //Arreglar esta parte, con el caso que esta en el main
                     Node n=next(key);
+                    start=n.parent;
                     //System.out.println("n "+n);
                     n.left=root.left;
                     if(root.left!=null){
@@ -445,27 +453,35 @@ public class AVLtree <T> {
                     n.parent=null;
                     //System.out.println(root);
                     //System.out.println(root.right.parent);
-                    return node;
                 }
             }
             else if(node.right==null){
                 if(node==node.parent.left){
                     node.parent.left=node.left;
+                    start=node.parent;
                     if(node.left!=null){
                         node.left.parent=node.parent;
                     }
-                    return node;
                 }
                 else{
                     node.parent.right=node.left;
+                    start=node.parent;
                     if(node.left!=null){
                         node.left.parent=node.parent;
                     }
-                    return node;
                 }
             }
             else{
                 Node n=next(key);
+                //System.out.print("Node "+node);
+                //System.out.println("Next "+n);
+                //System.out.println();
+                if(n.parent==node){
+                    start=null;
+                }
+                else{
+                    start=n.parent;
+                }
                 //System.out.println(n);
                 if(n.right==null){
                     if(node.parent.left==node){
@@ -485,7 +501,6 @@ public class AVLtree <T> {
                             n.parent.right=null;
                         }
                         n.parent=node.parent;
-                        return node;
                     }
                     else{
                         node.parent.right=n;
@@ -512,7 +527,6 @@ public class AVLtree <T> {
                         n.parent=node.parent;
                         //Aqui esta el problema, ver mañana
                         //System.out.println(node.right.left);
-                        return node;
                     }
                 }
                 else {
@@ -531,7 +545,6 @@ public class AVLtree <T> {
                             n.right=node.right;
                             node.right.parent=n;
                         }
-                        return node;
                     }
                     else{
                         node.parent.right=n;
@@ -552,33 +565,70 @@ public class AVLtree <T> {
                         //System.out.println(n.right);
                         //System.out.println(n.right.left);
                         //System.out.println(n.right);
-                        return node;
                     }
                 }
+                if(start==null){
+                    start=n;
+            }
             }
 
         }
+        rebalance(start);
+
     }
+
+
+    //This method must be modified to implement rotations
+
 
     public static void main(String [] args){
         AVLtree<Integer> avl=new AVLtree<>();
-        avl.insert(33);
         avl.insert(23);
-        avl.insert(15);
-        avl.insert(24);
-        avl.insert(37);
-        avl.insert(92);
-        avl.insert(31);
-        avl.insert(29);
-        avl.insert(99);
-        avl.insert(94);
-        avl.insert(22);
-        avl.insert(54);
-        avl.insert(75);
-        avl.insert(58);
+        avl.insert(9);
+        avl.insert(45);
+        avl.insert(8);
+        avl.insert(18);
         avl.insert(39);
-        avl.insert(55);
-        //avl.inOrder();
+        avl.insert(47);
+        avl.insert(5);
+        avl.insert(11);
+        avl.insert(21);
+        avl.insert(40);
+        avl.insert(49);
+        avl.delete(23);
+        avl.delete(11);
+        avl.insert(20);
+        avl.delete(21);
+        avl.delete(20);
+        avl.insert(48);
+        avl.delete(39);
+        avl.delete(40);
+        avl.insert(46);
+        avl.delete(18);
+        avl.delete(9);
+        avl.insert(2);
+        avl.delete(5);
+        avl.delete(49);
+        avl.insert(18);
+        avl.delete(2);
+        avl.delete(48);
+        avl.insert(26);
+        avl.delete(45);
+        avl.delete(26);
+        avl.insert(49);
+        avl.delete(18);
+        avl.delete(8);
+        avl.insert(28);
+        avl.delete(28);
+        avl.delete(46);
+        avl.insert(38);
+        avl.delete(38);
+        avl.delete(47);
+        avl.insert(37);
+        avl.delete(37);
+        avl.delete(49);
+        //avl.delete(74);
+        //avl.delete(75);
         //System.out.println();
         avl.levelTraversal();
     }
