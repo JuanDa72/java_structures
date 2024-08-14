@@ -54,6 +54,7 @@ public class StackArray {
 
     }
 
+
     //pruebas
     public static void main(String [] args){
         //pruebas con un array en el que no cambiamos el tamaño. tamaño igual a 3

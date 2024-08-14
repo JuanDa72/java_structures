@@ -287,6 +287,10 @@ public class UnorderedLinkedList<T> {
         }
     }
 
+    public GenericNode getHead(){
+        return this.head;
+    }
+
 
 
     public static void main(String [] args) {

@@ -2,7 +2,7 @@ package list;
 
 public class GenericUnorderedArrayList<T extends Comparable<T>> {
 
-    private static int size=15;
+    private static int size=3;
 
     private int count, position;
 
@@ -60,6 +60,10 @@ public class GenericUnorderedArrayList<T extends Comparable<T>> {
             inserted=true;
             count++;
         }
+        else{
+            System.err.println("Error: List is full or position is  out of range");
+            throw new RuntimeException("List is full or position is out of range");
+        }
         return inserted;
     }
 
@@ -94,18 +98,21 @@ public class GenericUnorderedArrayList<T extends Comparable<T>> {
         return count;
     }
 
+    private void resize(){
+        int newSize=size*2;
+        T [] newArray=(T[]) new Comparable [newSize];
+        System.arraycopy(lArray,0,newArray,0,size);
+        lArray=newArray;
+    }
+
     public static void main(String [] args){
-        GenericUnorderedArrayList<Integer> list=new GenericUnorderedArrayList<>();
+        GenericUnorderedArrayList<Integer> list=new GenericUnorderedArrayList<>(57);
         System.out.println(list.isEmpty());
         System.out.println(list.isFull());
         System.out.println(list.insert(4));
         list.insert(5);
         list.insert(4);
-        list.insert(56);
+        list.insert(2);
         System.out.println(list);
-        System.out.println(list.setValue(4,6));
-        System.out.println(list);
-        int value=list.getValue(0);
     }
-
 }

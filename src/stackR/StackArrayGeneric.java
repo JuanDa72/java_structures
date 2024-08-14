@@ -57,6 +57,15 @@ public class StackArrayGeneric <T> {
         return top;
     }
 
+
+    public T getTop() {
+        if (empty()) {
+            System.err.println("Error: Stack is empty");
+            throw new RuntimeException("Stack is empty");
+        }
+        return sArray[top - 1];
+    }
+
     public static void main(String [] args){
         //pruebas
         //La forma de instanciar la clase es como si fuera un arrayList
@@ -65,10 +74,7 @@ public class StackArrayGeneric <T> {
         stack.push("alone");
         stack.push("nobody");
         stack.push("life");
-        int counter=stack.getCount();
-        for(int i=0; i<counter; i++){
-            System.out.println(stack.pop());
-        }
+        System.out.println(stack.getTop());
 
 
         }
