@@ -582,55 +582,16 @@ public class AVLtree <T> {
 
 
     public static void main(String [] args){
-        AVLtree<Integer> avl=new AVLtree<>();
-        avl.insert(23);
-        avl.insert(9);
-        avl.insert(45);
-        avl.insert(8);
-        avl.insert(18);
-        avl.insert(39);
-        avl.insert(47);
-        avl.insert(5);
-        avl.insert(11);
-        avl.insert(21);
-        avl.insert(40);
-        avl.insert(49);
-        avl.delete(23);
-        avl.delete(11);
-        avl.insert(20);
-        avl.delete(21);
-        avl.delete(20);
-        avl.insert(48);
-        avl.delete(39);
-        avl.delete(40);
-        avl.insert(46);
-        avl.delete(18);
-        avl.delete(9);
-        avl.insert(2);
-        avl.delete(5);
-        avl.delete(49);
-        avl.insert(18);
-        avl.delete(2);
-        avl.delete(48);
-        avl.insert(26);
-        avl.delete(45);
-        avl.delete(26);
-        avl.insert(49);
-        avl.delete(18);
-        avl.delete(8);
-        avl.insert(28);
-        avl.delete(28);
-        avl.delete(46);
-        avl.insert(38);
-        avl.delete(38);
-        avl.delete(47);
-        avl.insert(37);
-        avl.delete(37);
-        avl.delete(49);
+        AVLtree<String> avl=new AVLtree<>();
+        avl.insert("a");
+        avl.insert("hola");
+        avl.insert("nadie");
+        avl.insert("amigas");
+        avl.insert("siga");
         //avl.delete(74);
         //avl.delete(75);
         //System.out.println();
-        avl.levelTraversal();
+        avl.inOrder();
     }
 
 

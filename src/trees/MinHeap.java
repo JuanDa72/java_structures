@@ -108,23 +108,11 @@ public class MinHeap {
 
     public static void main(String[] args){
         MinHeap heap=new MinHeap(10);
-        heap.insert(21);
-        heap.insert(1);
-        heap.insert(11);
-        heap.insert(20);
-        heap.insert(4);
         heap.insert(9);
-        heap.insert(7);
-        heap.insert(6);
-        heap.insert(5);
-        heap.insert(20);
-        heap.insert(7);
         heap.extractMax();
-        heap.changePriority(9,2);
-        heap.delete(6);
-        System.out.println(heap);
-        //System.out.println(heap);
-        //System.out.println(heap);
+        System.out.println(heap.getMax());
+        System.out.println(heap.getMax());
+
     }
 
 }
